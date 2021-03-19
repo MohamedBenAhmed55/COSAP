@@ -167,7 +167,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/modifypassword", name="api_modif_pass" , metho={"POST"})
+     * @Route("/api/modifypassword", name="api_modif_pass" , methods={"POST"})
      */
     public function modifypass(Request $request){
         $modify_user= json_decode(
