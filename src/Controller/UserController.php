@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -13,8 +14,22 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+
 class UserController extends AbstractController
 {
+
+
+    /**
+     * 
+     * @var UserRepository
+     */
+    private $repository;
+
+    public function __construct(UserRepository $repository)
+    {
+        $this->repository=$repository;
+    }
+
     /**
      * @Route("/user", name="user")
      */
@@ -34,7 +49,24 @@ class UserController extends AbstractController
     $email                  = $request->request->get("email");
     $password               = $request->request->get("password");
     $passwordConfirmation   = $request->request->get("password_confirmation");
+    $username               = $request->request->get("username");
+    $cin                    = $request->request->get("cin");
+    $nom                    = $request->request->get("nom");
+    $prenom                 = $request->request->get("prenom");
+    $date_nais              = $request->request->get("date_nais");
+    $date_embauche          = $request->request->get("date_embauche");
+    $genre                  = $request->request->get("Genre");
+    $adresse                = $request->request->get("adresse");
+    $salaire                = $request->request->get("salaire");
+    $phone                  = $request->request->get("phone");
+    $fax                    = $request->request->get("fax");
+    $pays                   = $request->request->get("pays");
+    $matricule              = $request->request->get("matricule");
+    $groupe                 = $request->request->get("groupe");
+    $poste                  = $request->request->get("poste");
+    
     $errors = [];
+    
     if($password != $passwordConfirmation)
     {
        $errors[] = "Password does not match the password confirmation.";
@@ -48,6 +80,20 @@ class UserController extends AbstractController
        $encodedPassword = $passwordEncoder->encodePassword($user, $password);
        $user->setEmail($email);
        $user->setPassword($encodedPassword);
+       $user->setusername($username);
+       $user->setCin($cin);
+       $user->setNom($nom);
+       $user->setPrenom($prenom);
+       $user->setDateNai($date_nais);
+       $user->setDateEmbauche($date_embauche);
+       $user->setAdresse($adresse);
+       $user->setSalaire($salaire);
+       $user->setPhone($phone);
+       $user->setFax($fax);
+       $user->setPays($pays);
+       $user->setMatricule($matricule);
+       $user->setGroupe($groupe);
+       $user->setPoste($poste);
        try
        {
            $om->persist($user);
@@ -124,10 +170,16 @@ class UserController extends AbstractController
      * @Route("/api/modifypassword", name="api_modif_pass" , metho={"POST"})
      */
     public function modifypass(Request $request){
-        $pass= json_decode(
+        $modify_user= json_decode(
             $request->getContent(),
             true
         );
+
+        $user= $this->repository->find($modify_user->id);
+        $user->setPassword($modify_user->password);
+        $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
         
     }
 

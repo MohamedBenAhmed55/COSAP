@@ -37,6 +37,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     // /**
+    //  * Undocumented function
+    //  *
+    //  * @param  $id
+    //  * @return user
+    //  */
+    // public function findUser($id){
+    //     return $this->createQueryBuilder('u')
+    //     ->andWhere('u.id = id');
+    // }
+
+    // /**
     //  * @return User[] Returns an array of User objects
     //  */
     /*
@@ -64,4 +75,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     */
+
+
 }
